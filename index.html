@@ -627,8 +627,44 @@
             background: var(--bg-card);
             border-radius: 4px;
             overflow: hidden;
+        }/* New CSS to enable horizontal scrolling on a wrapper element */
+.habit-week-scroller {
+    overflow-x: auto; /* Enables horizontal scrollbar when content is wider */
+    -webkit-overflow-scrolling: touch; /* Improves scrolling smoothness on iOS */
+    padding-bottom: 5px; /* Ensures the bottom scrollbar is visible without cutting into content */
+    margin-bottom: -5px; /* Negative margin to pull the scrollbar back into the container's padding */
         }
-
+        
+        /* Modify the grid to become a non-wrapping flex container on small screens */
+        .habit-week-grid {
+            display: flex; /* Change from grid to flex for horizontal scrolling */
+            flex-wrap: nowrap; /* CRITICAL: Prevents the day blocks from wrapping to the next line */
+            gap: 0.375rem;
+            width: max-content; /* Allows the content to determine the width (it will be wider than the viewport) */
+        }
+        
+        /* Ensure the day items don't shrink when scrolling is enabled */
+        .day-checkbox-wrapper {
+            flex-shrink: 0; /* Prevents the day columns from shrinking on the same row */
+            min-width: 44px; /* Give each day a reasonable minimum width */
+        }
+        
+        /* Revert the changes for desktop/tablet to keep the grid layout */
+        @media (min-width: 768px) {
+            .habit-week-scroller {
+                overflow-x: hidden;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            .habit-week-grid {
+                display: grid; /* Revert to grid for desktop */
+                grid-template-columns: repeat(7, 1fr); /* Revert to 7 equal columns */
+                width: 100%;
+            }
+            .day-checkbox-wrapper {
+                min-width: unset; /* Remove minimum width constraint */
+            }
+        }        
         .habit-progress-fill {
             height: 100%;
             border-radius: 4px;
