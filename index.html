@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Flow</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- AUTH SCREEN -->
+    <div class="auth" id="auth">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <div class="auth-icon">📊</div>
+                <div class="auth-title">Habit Flow</div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="auth.switchTab('login')">Login</button>
+                <button class="tab" onclick="auth.switchTab('signup')">Sign Up</button>
+            </div>
+
+            <form id="loginForm" onsubmit="auth.handleLogin(event)">
+                <div class="msg error" id="loginError"></div>
+                <div class="form-group">
+                    <label class="label">Username</label>
+                    <input type="text" class="input" id="loginUser" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Password</label>
+                    <div class="pass-wrap">
+                        <input type="password" class="input" id="loginPass" required>
+                        <button type="button" class="pass-toggle" onclick="auth.togglePass('loginPass')">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+
+            <form id="signupForm" style="display:none;" onsubmit="auth.handleSignup(event)">
+                <div class="msg error" id="signupError"></div>
+                <div class="msg success" id="signupSuccess"></div>
+                <div class="form-group">
+                    <label class="label">Username</label>
+                    <input type="text" class="input" id="signupUser" minlength="3" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Password</label>
+                    <div class="pass-wrap">
+                        <input type="password" class="input" id="signupPass" minlength="4" required>
+                        <button type="button" class="pass-toggle" onclick="auth.togglePass('signupPass')">👁️</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label">Confirm Password</label>
+                    <div class="pass-wrap">
+                        <input type="password" class="input" id="signupConfirm" required>
+                        <button type="button" class="pass-toggle" onclick="auth.togglePass('signupConfirm')">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="signupBtn">Create Account</button>
+            </form>
+
+            <div class="user-count"><strong id="userCount">0</strong> / 10 users</div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="app" id="app">
+        <div class="container">
+            <!-- HEADER -->
+            <div class="header">
+                <div class="logo">
+                    <span style="font-size:1.5rem;">📊</span>
+                    Habit Flow
+                </div>
+                <div class="actions">
+                    <button class="icon-btn" onclick="theme.toggle()" id="themeBtn">🌙</button>
+                    <div class="user-pill">
+                        <div class="avatar" id="avatar">U</div>
+                        <span id="username">User</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Habits</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="statToday">0</div>
+                    <div class="stat-label">Today</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="statStreak">0</div>
+                    <div class="stat-label">Streak</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="statMonth">0%</div>
+                    <div class="stat-label">Month</div>
+                </div>
+            </div>
+
+            <!-- MONTH & WEEK NAVIGATION -->
+            <div class="nav-container">
+                <div class="month-nav">
+                    <button class="nav-btn" onclick="habits.changeMonth(-1)">◀</button>
+                    <div class="month" id="monthName">November 2024</div>
+                    <button class="nav-btn" onclick="habits.changeMonth(1)">▶</button>
+                </div>
+                <div class="week-nav">
+                    <button class="nav-btn" onclick="habits.changeWeek(-1)">◀</button>
+                    <div class="week-info" id="weekInfo">Week 1</div>
+                    <button class="nav-btn" onclick="habits.changeWeek(1)">▶</button>
+                </div>
+            </div>
+
+            <!-- HABITS LIST -->
+            <div class="habits" id="habits"></div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" id="navHabits">
+                <span class="nav-icon">📋</span>
+                Habits
+            </button>
+            <button class="nav-item" onclick="modals.openStats()" id="navStats">
+                <span class="nav-icon">📊</span>
+                Stats
+            </button>
+            <button class="fab" onclick="modals.openAdd()">+</button>
+            <button class="nav-item" onclick="modals.openSettings()" id="navSettings">
+                <span class="nav-icon">⚙️</span>
+                Settings
+            </button>
+            <button class="nav-item" onclick="auth.logout()" id="navLogout">
+                <span class="nav-icon">🚪</span>
+                Logout
+            </button>
+        </nav>
+    </div>
+
+    <!-- ADD HABIT MODAL -->
+    <div class="modal" id="addModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Habit</h3>
+                <button class="close" onclick="modals.close('addModal')">×</button>
+            </div>
+            <form onsubmit="habits.save(event)">
+                <div class="form-group">
+                    <label class="label">Habit Name</label>
+                    <input type="text" class="input" id="habitName" placeholder="e.g., Morning Run" required>
+                </div>
+                <div class="form-group">
+                    <label class="label">Choose Icon</label>
+                    <div class="emoji-grid" id="emojiGrid"></div>
+                </div>
+                <div class="actions-grid">
+                    <button type="button" class="btn btn-ghost" onclick="modals.close('addModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="close" onclick="modals.close('settingsModal')">×</button>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Change Password</label>
+                <input type="password" class="input" id="newPass" placeholder="New password" minlength="4">
+            </div>
+            <button class="btn btn-primary" onclick="settings.changePassword()" style="margin-bottom:1rem;">Update</button>
+
+            <div class="section">
+                <div class="section-title">Backup</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <button class="btn btn-ghost" onclick="settings.exportData()">Export</button>
+                    <button class="btn btn-ghost" onclick="settings.importData()">Import</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Users (<span id="settingsUserCount">0</span>/10)</div>
+                <div class="user-list" id="userList"></div>
+            </div>
+
+            <div class="section">
+                <button class="btn btn-danger" onclick="settings.deleteAccount()">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS MODAL -->
+    <div class="modal" id="statsModal">
+        <div class="modal-box stats-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📊 Statistics</h3>
+                <button class="close" onclick="modals.close('statsModal')">×</button>
+            </div>
+
+            <!-- Progress Ring -->
+            <div class="stats-section">
+                <h4 class="stats-subtitle">Today's Progress</h4>
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" width="180" height="180">
+                        <circle class="ring-bg" cx="90" cy="90" r="70" />
+                        <circle class="ring-fill" id="progressRing" cx="90" cy="90" r="70" />
+                    </svg>
+                    <div class="ring-text">
+                        <div class="ring-percent" id="ringPercent">0%</div>
+                        <div class="ring-label">completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Chart -->
+            <div class="stats-section">
+                <h4 class="stats-subtitle">Weekly Overview</h4>
+                <canvas id="weeklyChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Monthly Chart -->
+            <div class="stats-section">
+                <h4 class="stats-subtitle">Monthly Trend</h4>
+                <canvas id="monthlyChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Top Streaks -->
+            <div class="stats-section">
+                <h4 class="stats-subtitle">🔥 Top Streaks</h4>
+                <div id="topStreaks"></div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="settings.handleImport(event)">
+
+    <script src="utils.js"></script>
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="habits.js"></script>
+    <script src="stats.js"></script>
+    <script src="settings.js"></script>
+    <script src="modals.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

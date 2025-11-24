@@ -1,130 +1,194 @@
-# Habit Flow — Daily Habit Tracker 📊
+# Habit Flow - Daily Habit Tracker
 
-A beautiful, interactive habit tracking dashboard with multi-user authentication, visualizations, and analytics. Track your daily habits, build streaks, and visualize your progress.
+A beautiful, responsive habit tracking application with multi-user support, week navigation, and detailed statistics.
 
-![Habit Flow Preview](preview.png)
+## 📁 Project Structure
+
+```
+habit-tracker/
+├── index.html          # Main HTML structure
+├── styles.css          # All CSS styles
+├── utils.js            # Utility functions (date, hash, etc.)
+├── storage.js          # LocalStorage management
+├── theme.js            # Light/Dark theme toggle
+├── auth.js             # User authentication & session
+├── habits.js           # Habit tracking & management
+├── stats.js            # Statistics & charts rendering
+├── modals.js           # Modal windows management
+├── settings.js         # User settings & data import/export
+└── app.js              # Main app initialization
+```
 
 ## ✨ Features
 
-### 🔐 Multi-User Authentication
-- **User Registration** — Sign up with username and password (up to 10 users)
-- **Secure Login** — Each user has their own private habit data
-- **Password Management** — Change your password anytime
-- **User Management** — View all registered users in settings
-- **Account Deletion** — Delete your own account or remove other users
+### Authentication
+- **Multi-user support** (up to 10 users)
+- **Secure password hashing**
+- **Session persistence**
+- **User management**
 
-### 📊 Habit Tracking
-- **📋 Daily Habit Tracking** — Check off habits for each day of the month
-- **📊 Visual Progress Ring** — See your daily completion rate at a glance
-- **📈 Weekly Bar Chart** — Track your weekly performance trends
-- **🔥 Streak Tracking** — Build and maintain habit streaks
-- **📅 Month Navigation** — Browse through past months to see historical data
-- **💾 Local Storage** — Your data is saved automatically in your browser
-- **📥 Export/Import** — Backup and restore your data as JSON files
-- **🎨 Beautiful Dark UI** — Modern, eye-friendly design with smooth animations
-- **📱 Responsive Design** — Works on desktop, tablet, and mobile
+### Habit Tracking
+- **Week navigation** - Navigate through weeks within a month
+- **Month navigation** - Switch between months
+- **7-day week view** - Track habits day by day
+- **Progress bars** - Visual feedback for each habit
+- **Streak counting** - Track your longest streaks
+- **20 emoji icons** - Customize your habits
 
-## 🚀 Quick Start
+### Statistics (NEW!)
+- **Today's Progress Ring** - Circular progress indicator
+- **Weekly Bar Chart** - See your last 7 days performance
+- **Monthly Line Chart** - Track your entire month trend
+- **Top Streaks Leaderboard** - Your best performing habits
 
-### Option 1: Open Directly
-Simply open `index.html` in your browser. That's it!
+### Design
+- **Light & Dark mode** - Toggle with 🌙/☀️ button
+- **Fully responsive** - Works on phones, tablets, and desktops
+- **No horizontal scrolling** - Fits all screen sizes perfectly
+- **Touch-friendly** - Large buttons for mobile use
 
-### Option 2: Host on GitHub Pages (Recommended)
-
-1. **Create a GitHub repository**
-   - Go to [github.com/new](https://github.com/new)
-   - Name it `habit-tracker` (or any name you prefer)
-   - Make it public
-   - Click "Create repository"
-
-2. **Upload the files**
-   - Click "uploading an existing file"
-   - Drag and drop `index.html` into the upload area
-   - Click "Commit changes"
-
-3. **Enable GitHub Pages**
-   - Go to your repository's **Settings**
-   - Scroll down to **Pages** (in the left sidebar)
-   - Under "Source", select **Deploy from a branch**
-   - Under "Branch", select **main** and **/ (root)**
-   - Click **Save**
-
-4. **Access your app**
-   - Wait 1-2 minutes for deployment
-   - Your app will be live at: `https://YOUR-USERNAME.github.io/habit-tracker`
-
-## 🎮 Usage
+## 🚀 How to Use
 
 ### Getting Started
-1. **Sign Up** — Create an account with a username (3+ characters) and password (4+ characters)
-2. **Login** — Enter your credentials to access your personal dashboard
-3. **Start Tracking** — Add habits and check them off daily!
+1. Open `index.html` in your browser
+2. Create an account (or login if you have one)
+3. Add your first habit
+4. Start tracking!
 
-### User Limits
-- Maximum **10 users** can register on a single instance
-- Each user has completely separate habit data
-- Users can view all registered users in Settings
+### Week Navigation
+- Use the **Week** arrows (◀ ▶) to navigate between weeks in the current month
+- Week info shows: "Week 2/5 (8-14)" (week number and date range)
+- Use the **Month** arrows to change months
 
-### Adding Habits
-- Click the **"+ Add Habit"** button
-- Enter a habit name
-- Choose an emoji icon
-- Click **Save Habit**
+### View Statistics
+- **Mobile**: Tap the 📊 Stats button in bottom navigation
+- **Desktop**: Click the 📊 Stats icon in navigation
+- View detailed charts and progress rings
 
-### Tracking Habits
-- Click on any checkbox to mark a habit as complete
-- Completed habits show a green checkmark
-- Future dates are automatically disabled
+### Debugging
 
-### Navigation
-- Use the **◀ ▶** buttons to navigate between months
-- View your progress across different time periods
+Each file is responsible for specific functionality:
 
-### Keyboard Shortcuts
-- `Ctrl/Cmd + N` — Add new habit
-- `Esc` — Close modal
+**Having issues with authentication?** → Check `auth.js`
 
-### Data Management
-- **Export** — Download your data as a JSON backup file
-- **Import** — Restore data from a previously exported file
+**Habits not saving?** → Check `habits.js` and `storage.js`
+
+**Charts not displaying?** → Check `stats.js`
+
+**Theme not working?** → Check `theme.js`
+
+**Styles broken?** → Check `styles.css`
 
 ## 🎨 Customization
 
-The app uses CSS custom properties for easy theming. Edit the `:root` section in the HTML file to customize colors:
+### Adding More Emojis
+Edit the `emojis` array in `habits.js`:
+```javascript
+emojis: ['💪','📚','🏃', '🎸', '🎮', ...] // Add your emojis here
+```
 
+### Changing Colors
+Edit CSS variables in `styles.css`:
 ```css
-:root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --accent-primary: #6366f1;
-    --accent-success: #10b981;
-    /* ... more variables */
+:root[data-theme="dark"] {
+    --accent: #6366f1;  /* Change primary color */
+    --success: #10b981; /* Change success color */
+    ...
 }
 ```
 
-## 📱 Screenshots
+### Modifying User Limit
+Change `MAX_USERS` in `storage.js`:
+```javascript
+MAX_USERS: 20  // Change from 10 to any number
+```
 
-### Desktop View
-- Full calendar grid with all days visible
-- Side panel with progress ring and charts
-- Hover effects and animations
+## 📊 Statistics Explained
 
-### Mobile View
-- Responsive layout that stacks vertically
-- Touch-friendly checkboxes
-- Scrollable habit table
+### Weekly Chart
+- Shows last 7 days of habit completion
+- Bar height = completion percentage
+- Today's bar is highlighted
+
+### Monthly Chart
+- Shows daily completion rate for entire month
+- Line graph with gradient fill
+- Points show each day's performance
+
+### Progress Ring
+- Shows today's completion percentage
+- Green ring fills based on completed habits
+- Updates in real-time as you check habits
+
+## 💾 Data Management
+
+### Export
+1. Open Settings (⚙️)
+2. Click "Export"
+3. Save JSON file to your computer
+
+### Import
+1. Open Settings (⚙️)
+2. Click "Import"
+3. Select your JSON backup file
+4. Confirm to restore data
 
 ## 🔧 Technical Details
 
-- **Pure HTML/CSS/JS** — No build tools or frameworks required
-- **LocalStorage** — Data persists in browser storage
-- **No Dependencies** — Single file, no external libraries (except Google Fonts)
-- **Modern CSS** — Uses CSS Grid, Flexbox, Custom Properties, and animations
+- **No dependencies** - Pure HTML, CSS, and JavaScript
+- **LocalStorage** - All data stored in browser
+- **Canvas API** - Used for rendering charts
+- **Responsive Grid** - Auto-adjusts to screen size
+- **Single-page app** - No page reloads needed
 
-## 📄 License
+## 📱 Responsive Breakpoints
 
-MIT License — feel free to use, modify, and share!
+- **Mobile**: < 768px (bottom navigation, stacked layout)
+- **Tablet/Desktop**: ≥ 768px (top navigation, side-by-side layout)
+
+## 🐛 Common Issues
+
+**Charts not showing?**
+- Make sure the stats modal is fully loaded
+- Check browser console for errors
+
+**Week navigation jumps to next month?**
+- This is expected - if you go past the last week, it moves to next month
+
+**Can't see full app on MacBook?**
+- The app auto-adjusts to screen width
+- Try refreshing the page
+
+**Data disappeared?**
+- Check if you're logged into the correct user
+- Export your data regularly as backup
+
+## 🚀 Deployment
+
+### GitHub Pages
+1. Create a new repository
+2. Upload all files
+3. Go to Settings → Pages
+4. Select "Deploy from branch"
+5. Choose "main" branch and "/" (root)
+6. Your app will be live at: `https://username.github.io/repo-name`
+
+### Local Development
+Simply open `index.html` in any modern browser. No build process needed!
+
+## 📝 License
+
+Free to use and modify for personal projects.
+
+## 🎯 Roadmap
+
+- [ ] Calendar month view
+- [ ] Habit categories
+- [ ] Custom themes
+- [ ] Data sync across devices
+- [ ] Habit reminders
+- [ ] More chart types
 
 ---
 
-Made with ❤️ for better habits
+**Made with ❤️ for building better habits**
